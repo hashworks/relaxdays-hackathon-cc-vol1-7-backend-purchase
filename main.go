@@ -10,8 +10,8 @@ import (
 	_ "modernc.org/sqlite"
 
 	"github.com/gchaincl/dotsql"
-	_ "github.com/hashworks/relaxdays-hackathon-vol1-backend/docs"
-	"github.com/hashworks/relaxdays-hackathon-vol1-backend/router"
+	_ "github.com/hashworks/relaxdays-hackathon-cc-vol1-7-backend-purchase/docs"
+	"github.com/hashworks/relaxdays-hackathon-cc-vol1-7-backend-purchase/router"
 )
 
 //go:embed sql/init.sql
@@ -23,9 +23,9 @@ var sqlAlter string
 //go:embed sql/select.sql
 var sqlSelect string
 
-// @title Backend Tasks
+// @title Purchase Backend Task
 // @version 1.0
-// @description Solution for backend task of https://sites.google.com/relaxdays.de/hackathon-relaxdays/startseite
+// @description Solution for 'Einkauf' backend task of https://sites.google.com/relaxdays.de/hackathon-relaxdays/startseite#h.klg8hathdmsn
 
 // @contact.name Justin Kromlinger
 // @contact.url https://hashworks.net
@@ -74,7 +74,6 @@ func main() {
 
 	// Init database
 	for _, command := range []string{
-		"create-table-storage",
 		"create-table-purchase",
 	} {
 		_, err := dotInit.Exec(server.DB, command)
@@ -85,7 +84,7 @@ func main() {
 
 	routerEngine := server.NewRouter()
 
-	log.Println("Starting backend on 0.0.0.0:8080")
+	log.Println("Starting purchase backend on 0.0.0.0:8080")
 
 	log.Fatal(routerEngine.Run(":8080"))
 }

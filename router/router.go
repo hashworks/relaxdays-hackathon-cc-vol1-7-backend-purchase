@@ -38,12 +38,6 @@ func (s Server) NewRouter() *gin.Engine {
 
 	router.POST(BasePath+"/purchase", s.PurchaseSave)
 
-	router.DELETE(BasePath+"/storage/:name", s.StorageDeleteByName)
-
-	router.GET(BasePath+"/storage", s.StorageGet)
-
-	router.PUT(BasePath+"/storage", s.StoragePut)
-
 	router.GET("/", func(c *gin.Context) {
 		c.Redirect(http.StatusMovedPermanently, "/swagger/index.html")
 	})

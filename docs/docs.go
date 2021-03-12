@@ -117,75 +117,6 @@ var doc = `{
                     }
                 }
             }
-        },
-        "/storage/": {
-            "get": {
-                "tags": [
-                    "Storage"
-                ],
-                "summary": "Returns all storages",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/models.Storage"
-                            }
-                        }
-                    }
-                }
-            },
-            "put": {
-                "tags": [
-                    "Storage"
-                ],
-                "summary": "Save or update a storage",
-                "parameters": [
-                    {
-                        "description": "Storage to save",
-                        "name": "storage",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/models.Storage"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": ""
-                    },
-                    "400": {
-                        "description": "Invalid storage",
-                        "schema": {
-                            "type": ""
-                        }
-                    }
-                }
-            }
-        },
-        "/storage/{name}": {
-            "delete": {
-                "tags": [
-                    "Storage"
-                ],
-                "summary": "Delete a storage by name",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Name of storage to delete",
-                        "name": "name",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "204": {
-                        "description": ""
-                    }
-                }
-            }
         }
     },
     "definitions": {
@@ -200,20 +131,6 @@ var doc = `{
                 },
                 "menge": {
                     "type": "integer"
-                }
-            }
-        },
-        "models.Storage": {
-            "type": "object",
-            "properties": {
-                "articleID": {
-                    "type": "integer"
-                },
-                "bestand": {
-                    "type": "integer"
-                },
-                "name": {
-                    "type": "string"
                 }
             }
         }
@@ -235,8 +152,8 @@ var SwaggerInfo = swaggerInfo{
 	Host:        "127.0.0.1:8080",
 	BasePath:    "/api/v1",
 	Schemes:     []string{},
-	Title:       "Backend Tasks",
-	Description: "Solution for backend task of https://sites.google.com/relaxdays.de/hackathon-relaxdays/startseite",
+	Title:       "Purchase Backend Task",
+	Description: "Solution for 'Einkauf' backend task of https://sites.google.com/relaxdays.de/hackathon-relaxdays/startseite#h.klg8hathdmsn",
 }
 
 type s struct{}

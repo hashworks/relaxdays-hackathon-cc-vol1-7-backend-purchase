@@ -1,4 +1,4 @@
-module github.com/hashworks/relaxdays-hackathon-vol1-backend
+module github.com/hashworks/relaxdays-hackathon-cc-vol1-7-backend-purchase
 
 go 1.16
 

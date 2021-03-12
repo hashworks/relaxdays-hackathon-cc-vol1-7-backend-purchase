@@ -9,26 +9,17 @@ definitions:
       menge:
         type: integer
     type: object
-  models.Storage:
-    properties:
-      articleID:
-        type: integer
-      bestand:
-        type: integer
-      name:
-        type: string
-    type: object
 host: 127.0.0.1:8080
 info:
   contact:
     email: justin.kromlinger@stud.htwk-leipzig.de
     name: Justin Kromlinger
     url: https://hashworks.net
-  description: Solution for backend task of https://sites.google.com/relaxdays.de/hackathon-relaxdays/startseite
+  description: Solution for 'Einkauf' backend task of https://sites.google.com/relaxdays.de/hackathon-relaxdays/startseite#h.klg8hathdmsn
   license:
     name: GNU Affero General Public License v3
     url: https://gnu.org/licenses/agpl.html
-  title: Backend Tasks
+  title: Purchase Backend Task
   version: "1.0"
 paths:
   /purchase:
@@ -86,48 +77,4 @@ paths:
       summary: Returns all saved purchases for a given article
       tags:
       - Purchase
-  /storage/:
-    get:
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.Storage'
-            type: array
-      summary: Returns all storages
-      tags:
-      - Storage
-    put:
-      parameters:
-      - description: Storage to save
-        in: body
-        name: storage
-        required: true
-        schema:
-          $ref: '#/definitions/models.Storage'
-      responses:
-        "200":
-          description: ""
-        "400":
-          description: Invalid storage
-          schema:
-            type: ""
-      summary: Save or update a storage
-      tags:
-      - Storage
-  /storage/{name}:
-    delete:
-      parameters:
-      - description: Name of storage to delete
-        in: path
-        name: name
-        required: true
-        type: string
-      responses:
-        "204":
-          description: ""
-      summary: Delete a storage by name
-      tags:
-      - Storage
 swagger: "2.0"
