@@ -4,18 +4,22 @@ import (
 	"database/sql"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/gchaincl/dotsql"
+	"github.com/gin-contrib/cache"
+	"github.com/gin-contrib/cache/persistence"
 	"github.com/gin-gonic/gin"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"github.com/swaggo/gin-swagger/swaggerFiles"
 )
 
 type Server struct {
-	DotAlter  *dotsql.DotSql
-	DotSelect *dotsql.DotSql
-	DB        *sql.DB
-	router    *gin.Engine
+	DotAlter   *dotsql.DotSql
+	DotSelect  *dotsql.DotSql
+	DB         *sql.DB
+	router     *gin.Engine
+	cacheStore *persistence.InMemoryStore
 }
 
 func CORS() gin.HandlerFunc {
@@ -30,11 +34,13 @@ func (s Server) NewRouter() *gin.Engine {
 	router := gin.Default()
 	router.Use(CORS())
 
-	router.GET("/purchases", s.PurchaseGet)
+	s.cacheStore = persistence.NewInMemoryStore(time.Second)
 
-	router.GET("/purchasesForArticle", s.PurchaseGetByArticleId)
+	router.GET("/purchases", cache.CachePage(s.cacheStore, time.Hour, s.PurchaseGet))
 
-	router.GET("/searchLieferant", s.PurchaseGetByVendorSearch)
+	router.GET("/purchasesForArticle", cache.CachePage(s.cacheStore, time.Hour, s.PurchaseGetByArticleId))
+
+	router.GET("/searchLieferant", cache.CachePage(s.cacheStore, time.Hour, s.PurchaseGetByVendorSearch))
 
 	router.POST("/purchase", s.PurchaseSave)
 

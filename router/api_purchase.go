@@ -104,5 +104,7 @@ func (s Server) PurchaseSave(c *gin.Context) {
 		return
 	}
 
+	s.cacheStore.Flush()
+
 	c.Status(http.StatusOK)
 }
