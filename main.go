@@ -7,8 +7,9 @@ import (
 
 	"database/sql"
 
-	_ "github.com/mattn/go-sqlite3"
+	sqlite "github.com/mattn/go-sqlite3"
 
+	"github.com/agnivade/levenshtein"
 	"github.com/gchaincl/dotsql"
 	_ "github.com/hashworks/relaxdays-hackathon-cc-vol1-7-backend-purchase/docs"
 	"github.com/hashworks/relaxdays-hackathon-cc-vol1-7-backend-purchase/router"
@@ -65,8 +66,17 @@ func main() {
 		log.Fatal(err.Error())
 	}
 
+	// Register custom sql functions
+	sql.Register("sqlite3_custom", &sqlite.SQLiteDriver{
+		ConnectHook: func(conn *sqlite.SQLiteConn) error {
+			if err := conn.RegisterFunc("levenshteinDistance", levenshtein.ComputeDistance, true); err != nil {
+				return err
+			}
+			return nil
+		}})
+
 	// Open database
-	server.DB, err = sql.Open("sqlite3", *dsn)
+	server.DB, err = sql.Open("sqlite3_custom", *dsn)
 	if err != nil {
 		log.Fatal(err.Error())
 	}

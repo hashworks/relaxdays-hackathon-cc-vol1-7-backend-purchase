@@ -34,6 +34,8 @@ func (s Server) NewRouter() *gin.Engine {
 
 	router.GET("/purchasesForArticle", s.PurchaseGetByArticleId)
 
+	router.GET("/searchLieferant", s.PurchaseGetByVendorSearch)
+
 	router.POST("/purchase", s.PurchaseSave)
 
 	router.GET("/", func(c *gin.Context) {

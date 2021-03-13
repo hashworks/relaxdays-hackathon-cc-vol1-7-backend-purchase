@@ -102,6 +102,37 @@
                     }
                 }
             }
+        },
+        "/searchLieferant": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Purchase"
+                ],
+                "summary": "Returns all saved purchases with a similar vendor",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Vendor query",
+                        "name": "x",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Purchase"
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {

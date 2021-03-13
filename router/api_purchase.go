@@ -8,7 +8,7 @@ import (
 	"github.com/hashworks/relaxdays-hackathon-cc-vol1-7-backend-purchase/models"
 )
 
-func (s Server) getPurchases(purchaseRows *sql.Rows, err error, c *gin.Context) {
+func (s Server) getPurchases(purchaseRows *sql.Rows, withLevenshteinDistance bool, err error, c *gin.Context) {
 	if err != nil {
 		s.internalServerError(c, err.Error())
 		return
@@ -18,7 +18,14 @@ func (s Server) getPurchases(purchaseRows *sql.Rows, err error, c *gin.Context) 
 
 	for purchaseRows.Next() {
 		var purchase models.Purchase
-		err := purchaseRows.Scan(&purchase.Vendor, &purchase.ArticleID, &purchase.Bulk)
+		var err error
+		if withLevenshteinDistance {
+			var _levenshteinDistance int
+			err = purchaseRows.Scan(&purchase.Vendor, &purchase.ArticleID, &purchase.Bulk, &_levenshteinDistance)
+			//log.Println("levenshteinDistance of %s = %d", purchase.Vendor, _levenshteinDistance)
+		} else {
+			err = purchaseRows.Scan(&purchase.Vendor, &purchase.ArticleID, &purchase.Bulk)
+		}
 		if err != nil {
 			s.internalServerError(c, err.Error())
 			return
@@ -40,7 +47,7 @@ func (s Server) PurchaseGet(c *gin.Context) {
 	purchaseRows, err := s.DotSelect.Query(s.DB, "select-purchase")
 	defer purchaseRows.Close()
 
-	s.getPurchases(purchaseRows, err, c)
+	s.getPurchases(purchaseRows, false, err, c)
 }
 
 // API endpoint that returns all saved purchases for a given article
@@ -55,7 +62,22 @@ func (s Server) PurchaseGetByArticleId(c *gin.Context) {
 	purchaseRowsByArticleId, err := s.DotSelect.Query(s.DB, "select-purchase-by-articleId", c.Query("x"))
 	defer purchaseRowsByArticleId.Close()
 
-	s.getPurchases(purchaseRowsByArticleId, err, c)
+	s.getPurchases(purchaseRowsByArticleId, false, err, c)
+}
+
+// API endpoint that returns all saved purchases with a similar vendor
+//
+// @Summary Returns all saved purchases with a similar vendor
+// @Produce json
+// @Success 200 {array} models.Purchase
+// @Param x query string true "Vendor query"
+// @Router /searchLieferant [get]
+// @Tags Purchase
+func (s Server) PurchaseGetByVendorSearch(c *gin.Context) {
+	purchaseRowsByVendorSearch, err := s.DotSelect.Query(s.DB, "search-purchase-by-vendor", c.Query("x"))
+	defer purchaseRowsByVendorSearch.Close()
+
+	s.getPurchases(purchaseRowsByVendorSearch, true, err, c)
 }
 
 // API endpoint that saves a purchase

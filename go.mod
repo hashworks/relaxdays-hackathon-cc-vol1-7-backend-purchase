@@ -3,6 +3,7 @@ module github.com/hashworks/relaxdays-hackathon-cc-vol1-7-backend-purchase
 go 1.16
 
 require (
+	github.com/agnivade/levenshtein v1.1.0
 	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751
 	github.com/gchaincl/dotsql v1.0.0
 	github.com/gin-gonic/gin v1.6.3

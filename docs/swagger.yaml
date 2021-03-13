@@ -77,4 +77,24 @@ paths:
       summary: Returns all saved purchases for a given article
       tags:
       - Purchase
+  /searchLieferant:
+    get:
+      parameters:
+      - description: Vendor query
+        in: query
+        name: x
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Purchase'
+            type: array
+      summary: Returns all saved purchases with a similar vendor
+      tags:
+      - Purchase
 swagger: "2.0"
