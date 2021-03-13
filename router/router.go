@@ -11,8 +11,6 @@ import (
 	"github.com/swaggo/gin-swagger/swaggerFiles"
 )
 
-const BasePath = "/api/v1"
-
 type Server struct {
 	DotAlter  *dotsql.DotSql
 	DotSelect *dotsql.DotSql
@@ -32,11 +30,11 @@ func (s Server) NewRouter() *gin.Engine {
 	router := gin.Default()
 	router.Use(CORS())
 
-	router.GET(BasePath+"/purchases", s.PurchaseGet)
+	router.GET("/purchases", s.PurchaseGet)
 
-	router.GET(BasePath+"/purchasesForArticle", s.PurchaseGetByArticleId)
+	router.GET("/purchasesForArticle", s.PurchaseGetByArticleId)
 
-	router.POST(BasePath+"/purchase", s.PurchaseSave)
+	router.POST("/purchase", s.PurchaseSave)
 
 	router.GET("/", func(c *gin.Context) {
 		c.Redirect(http.StatusMovedPermanently, "/swagger/index.html")

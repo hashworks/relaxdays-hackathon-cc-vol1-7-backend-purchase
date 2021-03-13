@@ -35,7 +35,7 @@ var sqlSelect string
 // @license.url https://gnu.org/licenses/agpl.html
 
 // @host 127.0.0.1:8080
-// @BasePath /api/v1
+// @BasePath /
 func main() {
 	dsn := flag.String("dsn", ":memory:", "SQLite database DSN")
 	flag.Parse()
