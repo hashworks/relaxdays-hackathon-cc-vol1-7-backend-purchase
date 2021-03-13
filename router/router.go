@@ -44,6 +44,8 @@ func (s Server) NewRouter() *gin.Engine {
 
 	router.POST("/purchase", s.PurchaseSave)
 
+	router.GET("/purchasesBetween", cache.CachePage(s.cacheStore, time.Hour, s.PurchaseGetByTime))
+
 	router.GET("/", func(c *gin.Context) {
 		c.Redirect(http.StatusMovedPermanently, "/swagger/index.html")
 	})

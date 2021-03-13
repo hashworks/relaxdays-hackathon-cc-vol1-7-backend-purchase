@@ -3,6 +3,7 @@ package router
 import (
 	"database/sql"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/hashworks/relaxdays-hackathon-cc-vol1-7-backend-purchase/models"
@@ -78,6 +79,32 @@ func (s Server) PurchaseGetByVendorSearch(c *gin.Context) {
 	defer purchaseRowsByVendorSearch.Close()
 
 	s.getPurchases(purchaseRowsByVendorSearch, true, err, c)
+}
+
+// API endpoint that returns all saved purchases between two points in time
+//
+// @Summary Returns all saved purchases between two points in time
+// @Produce json
+// @Success 200 {array} models.Purchase
+// @Failure 400 {} {} "Invalid points in time"
+// @Param x query string true "Starting point in time in the format 13.03.2021 13:59:58"
+// @Param y query string true "Ending point in time in the format 20.03.2021 15:59:58"
+// @Router /purchasesBetween [get]
+// @Tags Purchase
+func (s Server) PurchaseGetByTime(c *gin.Context) {
+	const layout = "02.01.2006 15:04:05"
+
+	x_parsed, x_err := time.Parse(layout, c.Query("x"))
+	y_parsed, y_err := time.Parse(layout, c.Query("y"))
+	if x_err != nil || y_err != nil {
+		c.Status(http.StatusBadRequest)
+		return
+	}
+
+	purchaseRowsByTime, err := s.DotSelect.Query(s.DB, "search-purchase-by-time", x_parsed.Local().Unix(), y_parsed.Local().Unix())
+	defer purchaseRowsByTime.Close()
+
+	s.getPurchases(purchaseRowsByTime, false, err, c)
 }
 
 // API endpoint that saves a purchase

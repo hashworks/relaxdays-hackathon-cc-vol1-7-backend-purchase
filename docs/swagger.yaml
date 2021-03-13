@@ -57,6 +57,35 @@ paths:
       summary: Returns all saved purchases
       tags:
       - Purchase
+  /purchasesBetween:
+    get:
+      parameters:
+      - description: Starting point in time in the format 13.03.2021 13:59:58
+        in: query
+        name: x
+        required: true
+        type: string
+      - description: Ending point in time in the format 20.03.2021 15:59:58
+        in: query
+        name: "y"
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Purchase'
+            type: array
+        "400":
+          description: Invalid points in time
+          schema:
+            type: ""
+      summary: Returns all saved purchases between two points in time
+      tags:
+      - Purchase
   /purchasesForArticle:
     get:
       parameters:

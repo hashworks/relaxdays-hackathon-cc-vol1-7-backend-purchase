@@ -87,6 +87,50 @@ var doc = `{
                 }
             }
         },
+        "/purchasesBetween": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Purchase"
+                ],
+                "summary": "Returns all saved purchases between two points in time",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Starting point in time in the format 13.03.2021 13:59:58",
+                        "name": "x",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Ending point in time in the format 20.03.2021 15:59:58",
+                        "name": "y",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Purchase"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid points in time",
+                        "schema": {
+                            "type": ""
+                        }
+                    }
+                }
+            }
+        },
         "/purchasesForArticle": {
             "get": {
                 "produces": [
