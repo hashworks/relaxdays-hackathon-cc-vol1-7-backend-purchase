@@ -37,7 +37,7 @@ var sqlSelect string
 // @host 127.0.0.1:8080
 // @BasePath /
 func main() {
-	dsn := flag.String("dsn", ":memory:", "SQLite database DSN")
+	dsn := flag.String("dsn", "file::memory:?cache=shared", "SQLite database DSN")
 	flag.Parse()
 
 	if len(*dsn) == 0 {
