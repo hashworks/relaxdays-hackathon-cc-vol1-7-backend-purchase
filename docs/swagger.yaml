@@ -57,11 +57,11 @@ paths:
       summary: Returns all saved purchases
       tags:
       - Purchase
-  /purchasesForArticle/{articleId}:
+  /purchasesForArticle:
     get:
       parameters:
       - description: ID of article to query
-        in: path
+        in: query
         name: articleId
         required: true
         type: integer

@@ -34,7 +34,7 @@ func (s Server) NewRouter() *gin.Engine {
 
 	router.GET(BasePath+"/purchases", s.PurchaseGet)
 
-	router.GET(BasePath+"/purchasesForArticle/:articleId", s.PurchaseGetByArticleId)
+	router.GET(BasePath+"/purchasesForArticle", s.PurchaseGetByArticleId)
 
 	router.POST(BasePath+"/purchase", s.PurchaseSave)
 

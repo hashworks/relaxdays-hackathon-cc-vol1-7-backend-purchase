@@ -87,7 +87,7 @@ var doc = `{
                 }
             }
         },
-        "/purchasesForArticle/{articleId}": {
+        "/purchasesForArticle": {
             "get": {
                 "produces": [
                     "application/json"
@@ -101,7 +101,7 @@ var doc = `{
                         "type": "integer",
                         "description": "ID of article to query",
                         "name": "articleId",
-                        "in": "path",
+                        "in": "query",
                         "required": true
                     }
                 ],

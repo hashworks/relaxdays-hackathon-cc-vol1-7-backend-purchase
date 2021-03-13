@@ -48,8 +48,8 @@ func (s Server) PurchaseGet(c *gin.Context) {
 // @Summary Returns all saved purchases for a given article
 // @Produce json
 // @Success 200 {array} models.Purchase
-// @Param articleId path int true "ID of article to query"
-// @Router /purchasesForArticle/{articleId} [get]
+// @Param articleId query int true "ID of article to query"
+// @Router /purchasesForArticle [get]
 // @Tags Purchase
 func (s Server) PurchaseGetByArticleId(c *gin.Context) {
 	purchaseRowsByArticleId, err := s.DotSelect.Query(s.DB, "select-purchase-by-articleId", c.Param("articleId"))
