@@ -2,10 +2,10 @@ FROM golang:1.16 AS build
 WORKDIR /go/src
 COPY ./ ./
 
-ENV CGO_ENABLED=0
+ENV CGO_ENABLED=1
 RUN go get -d -v ./...
 
-RUN go build -a -installsuffix cgo -o server .
+RUN go build -ldflags '-linkmode external -w -extldflags "-static"' -a -installsuffix cgo -o server .
 
 FROM scratch AS runtime
 ENV GIN_MODE=release

@@ -7,7 +7,7 @@ import (
 
 	"database/sql"
 
-	_ "modernc.org/sqlite"
+	_ "github.com/mattn/go-sqlite3"
 
 	"github.com/gchaincl/dotsql"
 	_ "github.com/hashworks/relaxdays-hackathon-cc-vol1-7-backend-purchase/docs"
@@ -66,7 +66,7 @@ func main() {
 	}
 
 	// Open database
-	server.DB, err = sql.Open("sqlite", *dsn)
+	server.DB, err = sql.Open("sqlite3", *dsn)
 	if err != nil {
 		log.Fatal(err.Error())
 	}
