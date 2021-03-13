@@ -1,4 +1,4 @@
-basePath: /api/v1
+basePath: /
 definitions:
   models.Purchase:
     properties:
@@ -62,7 +62,7 @@ paths:
       parameters:
       - description: ID of article to query
         in: query
-        name: articleId
+        name: x
         required: true
         type: integer
       produces:

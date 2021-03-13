@@ -100,7 +100,7 @@ var doc = `{
                     {
                         "type": "integer",
                         "description": "ID of article to query",
-                        "name": "articleId",
+                        "name": "x",
                         "in": "query",
                         "required": true
                     }
@@ -150,7 +150,7 @@ type swaggerInfo struct {
 var SwaggerInfo = swaggerInfo{
 	Version:     "1.0",
 	Host:        "127.0.0.1:8080",
-	BasePath:    "/api/v1",
+	BasePath:    "/",
 	Schemes:     []string{},
 	Title:       "Purchase Backend Task",
 	Description: "Solution for 'Einkauf' backend task of https://sites.google.com/relaxdays.de/hackathon-relaxdays/startseite#h.klg8hathdmsn",
