@@ -15,6 +15,11 @@ docker run -p 8080:8080 -it relaxdays-hackathon-cc-vol1-7-backend-purchase
 
 Afterwards you can access http://127.0.0.1:8080/ which will redirect you to the swagger UI.
 
+By default, data is stored in a SQLite database in memory. To persist data you can provide a DSL:
+```bash
+docker run -v "$(pwd)/output:/output" -p 8080:8080 -it relaxdays-hackathon-cc-vol1-7-backend-purchase -dsn "file:/data/output.sqlite?cache=shared"
+```
+
 ## OpenAPI definitions
 
 OpenAPI definitions are available as [YAML](https://github.com/hashworks/relaxdays-hackathon-cc-vol1-7-backend-purchase/blob/master/docs/swagger.yaml) and [JSON](https://github.com/hashworks/relaxdays-hackathon-cc-vol1-7-backend-purchase/blob/master/docs/swagger.json).
