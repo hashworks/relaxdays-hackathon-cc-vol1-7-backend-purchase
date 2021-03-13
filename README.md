@@ -17,7 +17,7 @@ Afterwards you can access http://127.0.0.1:8080/ which will redirect you to the 
 
 By default, data is stored in a SQLite database in memory. To persist data you can provide a DSL:
 ```bash
-docker run -v "$(pwd)/output:/output" -p 8080:8080 -it relaxdays-hackathon-cc-vol1-7-backend-purchase -dsn "file:/data/output.sqlite?cache=shared"
+docker run -v "$(pwd)/output:/output" -p 8080:8080 -it relaxdays-hackathon-cc-vol1-7-backend-purchase -dsn "file:/output/output.sqlite?cache=shared"
 ```
 
 ## OpenAPI definitions
