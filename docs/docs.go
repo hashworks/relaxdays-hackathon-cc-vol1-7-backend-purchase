@@ -170,7 +170,7 @@ var doc = `{
                 "tags": [
                     "Purchase"
                 ],
-                "summary": "Returns all saved purchases with a similar vendor",
+                "summary": "Returns a list of vendors similar to a query",
                 "parameters": [
                     {
                         "type": "string",
@@ -186,7 +186,7 @@ var doc = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/models.Purchase"
+                                "type": "string"
                             }
                         }
                     }

@@ -9,7 +9,7 @@ import (
 	"github.com/hashworks/relaxdays-hackathon-cc-vol1-7-backend-purchase/models"
 )
 
-func (s Server) getPurchases(purchaseRows *sql.Rows, withLevenshteinDistance bool, err error, c *gin.Context) {
+func (s Server) getPurchases(purchaseRows *sql.Rows, err error, c *gin.Context) {
 	if err != nil {
 		s.internalServerError(c, err.Error())
 		return
@@ -20,13 +20,7 @@ func (s Server) getPurchases(purchaseRows *sql.Rows, withLevenshteinDistance boo
 	for purchaseRows.Next() {
 		var purchase models.Purchase
 		var err error
-		if withLevenshteinDistance {
-			var _levenshteinDistance int
-			err = purchaseRows.Scan(&purchase.Vendor, &purchase.ArticleID, &purchase.Bulk, &_levenshteinDistance)
-			//log.Println("levenshteinDistance of %s = %d", purchase.Vendor, _levenshteinDistance)
-		} else {
-			err = purchaseRows.Scan(&purchase.Vendor, &purchase.ArticleID, &purchase.Bulk)
-		}
+		err = purchaseRows.Scan(&purchase.Vendor, &purchase.ArticleID, &purchase.Bulk)
 		if err != nil {
 			s.internalServerError(c, err.Error())
 			return
@@ -48,7 +42,7 @@ func (s Server) PurchaseGet(c *gin.Context) {
 	purchaseRows, err := s.DotSelect.Query(s.DB, "select-purchase")
 	defer purchaseRows.Close()
 
-	s.getPurchases(purchaseRows, false, err, c)
+	s.getPurchases(purchaseRows, err, c)
 }
 
 // API endpoint that returns all saved purchases for a given article
@@ -63,22 +57,42 @@ func (s Server) PurchaseGetByArticleId(c *gin.Context) {
 	purchaseRowsByArticleId, err := s.DotSelect.Query(s.DB, "select-purchase-by-articleId", c.Query("x"))
 	defer purchaseRowsByArticleId.Close()
 
-	s.getPurchases(purchaseRowsByArticleId, false, err, c)
+	s.getPurchases(purchaseRowsByArticleId, err, c)
 }
 
-// API endpoint that returns all saved purchases with a similar vendor
+// API endpoint that returns a list of vendors similar to a query
 //
-// @Summary Returns all saved purchases with a similar vendor
+// @Summary Returns a list of vendors similar to a query
 // @Produce json
-// @Success 200 {array} models.Purchase
+// @Success 200 {array} models.Vendor
 // @Param x query string true "Vendor query"
 // @Router /searchLieferant [get]
 // @Tags Purchase
-func (s Server) PurchaseGetByVendorSearch(c *gin.Context) {
-	purchaseRowsByVendorSearch, err := s.DotSelect.Query(s.DB, "search-purchase-by-vendor", c.Query("x"))
-	defer purchaseRowsByVendorSearch.Close()
+func (s Server) PurchaseVendorSearch(c *gin.Context) {
+	vendorRows, err := s.DotSelect.Query(s.DB, "search-vendor", c.Query("x"))
+	defer vendorRows.Close()
 
-	s.getPurchases(purchaseRowsByVendorSearch, true, err, c)
+	if err != nil {
+		s.internalServerError(c, err.Error())
+		return
+	}
+
+	allVendors := make([]models.Vendor, 0)
+
+	for vendorRows.Next() {
+		var vendor models.Vendor
+		var err error
+		var _levenshteinDistance int
+		err = vendorRows.Scan(&vendor, &_levenshteinDistance)
+		//log.Println("levenshteinDistance of %s = %d", purchase.Vendor, _levenshteinDistance)
+		if err != nil {
+			s.internalServerError(c, err.Error())
+			return
+		}
+		allVendors = append(allVendors, vendor)
+	}
+
+	c.JSON(http.StatusOK, allVendors)
 }
 
 // API endpoint that returns all saved purchases between two points in time
@@ -104,7 +118,7 @@ func (s Server) PurchaseGetByTime(c *gin.Context) {
 	purchaseRowsByTime, err := s.DotSelect.Query(s.DB, "search-purchase-by-time", x_parsed.Local().Unix(), y_parsed.Local().Unix())
 	defer purchaseRowsByTime.Close()
 
-	s.getPurchases(purchaseRowsByTime, false, err, c)
+	s.getPurchases(purchaseRowsByTime, err, c)
 }
 
 // API endpoint that saves a purchase

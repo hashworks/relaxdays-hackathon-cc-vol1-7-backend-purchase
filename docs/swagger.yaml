@@ -121,9 +121,9 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/models.Purchase'
+              type: string
             type: array
-      summary: Returns all saved purchases with a similar vendor
+      summary: Returns a list of vendors similar to a query
       tags:
       - Purchase
 swagger: "2.0"

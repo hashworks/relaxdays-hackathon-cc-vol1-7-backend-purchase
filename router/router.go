@@ -40,7 +40,7 @@ func (s Server) NewRouter() *gin.Engine {
 
 	router.GET("/purchasesForArticle", cache.CachePage(s.cacheStore, time.Hour, s.PurchaseGetByArticleId))
 
-	router.GET("/searchLieferant", cache.CachePage(s.cacheStore, time.Hour, s.PurchaseGetByVendorSearch))
+	router.GET("/searchLieferant", cache.CachePage(s.cacheStore, time.Hour, s.PurchaseVendorSearch))
 
 	router.POST("/purchase", s.PurchaseSave)
 
