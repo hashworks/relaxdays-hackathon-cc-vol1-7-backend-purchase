@@ -10,5 +10,8 @@ SELECT DISTINCT vendor, levenshteinDistance(vendor,?) as ld FROM purchase WHERE 
 -- name: search-purchase-by-time
 SELECT vendor, articleId, bulk, priceInCents / 100.0 as priceInEuro FROM purchase WHERE created >= ? AND created <= ?;
 
--- name: search-price-over-time
+-- name: select-price-over-time
 SELECT priceInCents / 100.0 as priceInEuro, created FROM purchase WHERE articleId = ? ORDER BY created;
+
+-- name: select-articleId-by-vendor
+SELECT DISTINCT articleId FROM (SELECT articleId, priceInCents FROM purchase WHERE vendor = ? ORDER BY created DESC) ORDER BY priceInCents;

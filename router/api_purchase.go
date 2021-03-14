@@ -167,7 +167,7 @@ func (s Server) PurchaseSave(c *gin.Context) {
 // @Router /plot [get]
 // @Tags Purchase
 func (s Server) PurchasePlotPriceOverTime(c *gin.Context) {
-	priceRowsOverTime, err := s.DotSelect.Query(s.DB, "search-price-over-time", c.Query("x"))
+	priceRowsOverTime, err := s.DotSelect.Query(s.DB, "select-price-over-time", c.Query("x"))
 	defer priceRowsOverTime.Close()
 
 	if err != nil {
@@ -216,4 +216,38 @@ func (s Server) PurchasePlotPriceOverTime(c *gin.Context) {
 	err = graph.Render(chart.PNG, c.Writer)
 
 	c.Status(http.StatusOK)
+}
+
+// API endpoint that lists articleIDs by vendor
+//
+// @Summary Returns articleIDs by vendor
+// @Produce json
+// @Success 200 {array} int
+// @Param x query string true "Vendor"
+// @Router /articlesForLieferant [get]
+// @Tags Purchase
+func (s Server) PurchaseGetArticlesByVendor(c *gin.Context) {
+	articleIDRows, err := s.DotSelect.Query(s.DB, "select-articleId-by-vendor", c.Query("x"))
+	defer articleIDRows.Close()
+
+	if err != nil {
+		s.internalServerError(c, err.Error())
+		return
+	}
+
+	articleIDs := make([]int, 0)
+
+	for articleIDRows.Next() {
+		var articleId int
+		var err error
+		err = articleIDRows.Scan(&articleId)
+		if err != nil {
+			s.internalServerError(c, err.Error())
+			return
+		}
+
+		articleIDs = append(articleIDs, articleId)
+	}
+
+	c.JSON(http.StatusOK, articleIDs)
 }

@@ -24,6 +24,26 @@ info:
   title: Purchase Backend Task
   version: "1.0"
 paths:
+  /articlesForLieferant:
+    get:
+      parameters:
+      - description: Vendor
+        in: query
+        name: x
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              type: integer
+            type: array
+      summary: Returns articleIDs by vendor
+      tags:
+      - Purchase
   /plot:
     get:
       parameters:
