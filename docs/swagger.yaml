@@ -8,6 +8,8 @@ definitions:
         type: string
       menge:
         type: integer
+      preis:
+        type: number
     type: object
 host: 127.0.0.1:8080
 info:
@@ -22,6 +24,24 @@ info:
   title: Purchase Backend Task
   version: "1.0"
 paths:
+  /plot:
+    get:
+      parameters:
+      - description: Article ID
+        in: query
+        name: x
+        required: true
+        type: string
+      produces:
+      - image/png
+      responses:
+        "200":
+          description: ""
+        "404":
+          description: ""
+      summary: Returns a plot of the price of an article over time
+      tags:
+      - Purchase
   /purchase:
     post:
       consumes:

@@ -4,5 +4,6 @@ CREATE TABLE IF NOT EXISTS purchase(
   vendor VARCHAR NOT NULL,
   articleId INTEGER,
   bulk INTEGER,
-  created TIMESTAMP
+  created TIMESTAMP,
+  priceInCents INTEGER
 );

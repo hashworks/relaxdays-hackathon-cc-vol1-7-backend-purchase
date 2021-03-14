@@ -17,6 +17,34 @@
     "host": "127.0.0.1:8080",
     "basePath": "/",
     "paths": {
+        "/plot": {
+            "get": {
+                "produces": [
+                    "image/png"
+                ],
+                "tags": [
+                    "Purchase"
+                ],
+                "summary": "Returns a plot of the price of an article over time",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Article ID",
+                        "name": "x",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    },
+                    "404": {
+                        "description": ""
+                    }
+                }
+            }
+        },
         "/purchase": {
             "post": {
                 "consumes": [
@@ -191,6 +219,9 @@
                 },
                 "menge": {
                     "type": "integer"
+                },
+                "preis": {
+                    "type": "number"
                 }
             }
         }

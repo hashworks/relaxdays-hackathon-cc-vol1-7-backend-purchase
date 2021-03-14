@@ -13,8 +13,10 @@ type Purchase struct {
 	ArticleID ArticleID `json:"articleID,omitempty"`
 
 	Bulk int `json:"menge,omitempty"`
+
+	Price float64 `json:"preis,omitempty"`
 }
 
 func (p Purchase) IsValid() bool {
-	return p.ArticleID > 0 && len(p.Vendor) > 0 && p.Bulk > 0
+	return p.ArticleID > 0 && len(p.Vendor) > 0 && p.Bulk > 0 && p.Price >= 0
 }

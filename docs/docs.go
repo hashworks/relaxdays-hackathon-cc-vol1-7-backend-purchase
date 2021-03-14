@@ -32,6 +32,34 @@ var doc = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/plot": {
+            "get": {
+                "produces": [
+                    "image/png"
+                ],
+                "tags": [
+                    "Purchase"
+                ],
+                "summary": "Returns a plot of the price of an article over time",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Article ID",
+                        "name": "x",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    },
+                    "404": {
+                        "description": ""
+                    }
+                }
+            }
+        },
         "/purchase": {
             "post": {
                 "consumes": [
@@ -206,6 +234,9 @@ var doc = `{
                 },
                 "menge": {
                     "type": "integer"
+                },
+                "preis": {
+                    "type": "number"
                 }
             }
         }

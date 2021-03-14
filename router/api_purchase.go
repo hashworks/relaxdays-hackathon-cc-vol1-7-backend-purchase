@@ -2,12 +2,16 @@ package router
 
 import (
 	"database/sql"
+	"fmt"
 	"net/http"
 	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/hashworks/relaxdays-hackathon-cc-vol1-7-backend-purchase/models"
+	"github.com/wcharczuk/go-chart/v2"
 )
+
+const layout = "02.01.2006 15:04:05"
 
 func (s Server) getPurchases(purchaseRows *sql.Rows, err error, c *gin.Context) {
 	if err != nil {
@@ -20,7 +24,7 @@ func (s Server) getPurchases(purchaseRows *sql.Rows, err error, c *gin.Context) 
 	for purchaseRows.Next() {
 		var purchase models.Purchase
 		var err error
-		err = purchaseRows.Scan(&purchase.Vendor, &purchase.ArticleID, &purchase.Bulk)
+		err = purchaseRows.Scan(&purchase.Vendor, &purchase.ArticleID, &purchase.Bulk, &purchase.Price)
 		if err != nil {
 			s.internalServerError(c, err.Error())
 			return
@@ -106,8 +110,6 @@ func (s Server) PurchaseVendorSearch(c *gin.Context) {
 // @Router /purchasesBetween [get]
 // @Tags Purchase
 func (s Server) PurchaseGetByTime(c *gin.Context) {
-	const layout = "02.01.2006 15:04:05"
-
 	x_parsed, x_err := time.Parse(layout, c.Query("x"))
 	y_parsed, y_err := time.Parse(layout, c.Query("y"))
 	if x_err != nil || y_err != nil {
@@ -139,13 +141,79 @@ func (s Server) PurchaseSave(c *gin.Context) {
 		return
 	}
 
-	_, err := s.DotAlter.Exec(s.DB, "insert-purchase", purchase.Vendor, purchase.ArticleID, purchase.Bulk)
+	_, err := s.DotAlter.Exec(s.DB, "insert-purchase",
+		purchase.Vendor,
+		purchase.ArticleID,
+		purchase.Bulk,
+		int(purchase.Price*100.0),
+	)
 	if err != nil {
 		s.internalServerError(c, err.Error())
 		return
 	}
 
 	s.cacheStore.Flush()
+
+	c.Status(http.StatusOK)
+}
+
+// API endpoint that plots the price of an article over time
+//
+// @Summary Returns a plot of the price of an article over time
+// @Produce png
+// @Success 200
+// @Failure 404
+// @Param x query string true "Article ID"
+// @Router /plot [get]
+// @Tags Purchase
+func (s Server) PurchasePlotPriceOverTime(c *gin.Context) {
+	priceRowsOverTime, err := s.DotSelect.Query(s.DB, "search-price-over-time", c.Query("x"))
+	defer priceRowsOverTime.Close()
+
+	if err != nil {
+		s.internalServerError(c, err.Error())
+		return
+	}
+
+	plot := chart.TimeSeries{
+		XValues: []time.Time{},
+		YValues: []float64{},
+	}
+
+	for priceRowsOverTime.Next() {
+		var price float64
+		var created time.Time
+		var err error
+		err = priceRowsOverTime.Scan(&price, &created)
+		if err != nil {
+			s.internalServerError(c, err.Error())
+			return
+		}
+
+		plot.XValues = append(plot.XValues, created)
+		plot.YValues = append(plot.YValues, price)
+	}
+
+	if len(plot.XValues) == 0 {
+		c.Status(http.StatusNotFound)
+		return
+	}
+
+	c.Header("Content-Type", chart.ContentTypePNG)
+	c.Header("Cache-Control", "max-age=600")
+	c.Header("Last-Modified", time.Now().Format(time.RFC1123))
+
+	graph := &chart.Chart{
+		Title:  fmt.Sprintf("Prices of %s over time", c.Query("x")),
+		Width:  800,
+		Height: 600,
+		Series: []chart.Series{plot},
+		XAxis: chart.XAxis{
+			ValueFormatter: chart.TimeValueFormatterWithFormat(layout),
+		},
+	}
+
+	err = graph.Render(chart.PNG, c.Writer)
 
 	c.Status(http.StatusOK)
 }
